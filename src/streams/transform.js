@@ -7,7 +7,6 @@ const transform = async () => {
     const ts = new Transform({
         transform(chunk, encoding, callback) {
             const str = chunk.toString().trim().split('').reverse().join('')
-            // this.push(str)
             callback(null, str + EOL)
         }
     })
