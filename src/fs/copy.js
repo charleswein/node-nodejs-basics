@@ -1,8 +1,8 @@
 import {join} from "node:path";
 import {constants, copyFile, mkdir, readdir} from "node:fs/promises";
-import {getPathToFolders} from "../utils.mjs";
+import {getPathToFolders, operationFailedMessage} from "../utils.mjs";
 
-const {pathToSourceFolder, pathToFilesFolder, fsOperationFailedMessage} = getPathToFolders(import.meta.url)
+const {pathToSourceFolder, pathToFilesFolder} = getPathToFolders(import.meta.url)
 const pathToFilesCopyDir = join(pathToSourceFolder, '/files_copy')
 
 const copy = async () => {
@@ -14,12 +14,12 @@ const copy = async () => {
             try {
                 await copyFile(`${pathToFilesFolder}/${fileName}`, `${pathToFilesCopyDir}/${fileName}`, constants.COPYFILE_EXCL)
             } catch (err) {
-                throw new Error(fsOperationFailedMessage)
+                throw new Error(operationFailedMessage)
             }
         }
     } catch (err) {
         if(err.code === "EEXIST" || err.code === "ENOENT") {
-            throw new Error(fsOperationFailedMessage)
+            throw new Error(operationFailedMessage)
         }
 
         throw err
