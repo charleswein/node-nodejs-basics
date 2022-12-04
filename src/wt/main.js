@@ -4,12 +4,13 @@ import {cpus} from "node:os";
 import {getPathToFolders} from "../utils.mjs";
 
 const {pathToSourceFolder} = getPathToFolders(import.meta.url)
-
-let count = cpus().length
+let CPULength = cpus().length
 
 const performCalculations = async () => {
     // Write your code here
-    const workerResults = await Promise.allSettled(new Array(count).fill(undefined).map((_, index) => {
+    let count = CPULength
+
+    const workerResults = await Promise.allSettled(new Array(CPULength).fill(undefined).map((_, index) => {
         return new Promise((resolve, reject) => {
             const worker = new Worker(join(pathToSourceFolder, '/worker.js'), {workerData: count + index})
             worker.on("message", (value) => {
@@ -22,6 +23,10 @@ const performCalculations = async () => {
             })
         })
     }))
+    console.log(workerResults.map(({status, value}) => ({
+        status: status === "fulfilled" ? 'resolved' : 'error',
+        data: value
+    })))
 
     return workerResults.map(({status, value}) => ({
         status: status === "fulfilled" ? 'resolved' : 'error',
