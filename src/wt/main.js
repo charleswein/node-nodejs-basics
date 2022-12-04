@@ -14,7 +14,6 @@ const performCalculations = async () => {
         return new Promise((resolve, reject) => {
             const worker = new Worker(join(pathToSourceFolder, '/worker.js'), {workerData: count + index})
             worker.on("message", (value) => {
-                console.log(value)
                 resolve(value)
             })
             worker.on("error", reject)
@@ -23,10 +22,6 @@ const performCalculations = async () => {
             })
         })
     }))
-    console.log(workerResults.map(({status, value}) => ({
-        status: status === "fulfilled" ? 'resolved' : 'error',
-        data: value
-    })))
 
     return workerResults.map(({status, value}) => ({
         status: status === "fulfilled" ? 'resolved' : 'error',
