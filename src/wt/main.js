@@ -23,10 +23,10 @@ const performCalculations = async () => {
         })
     }))
 
-    return workerResults.map(({status, value}) => ({
+    console.log(workerResults.map(({status, value}) => ({
         status: status === "fulfilled" ? 'resolved' : 'error',
         data: value
-    }))
+    })))
 };
 
 await performCalculations();
